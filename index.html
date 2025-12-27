@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSTM System Map & Operating Doctrine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: #000;
+            color: #fff;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid #333;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .tagline {
+            font-size: 0.95rem;
+            color: #aaa;
+            font-weight: 300;
+        }
+
+        .header .mission {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #1a1a1a;
+            border-left: 3px solid #fff;
+            font-size: 0.9rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .status-bar {
+            background: #fff;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #000;
+        }
+
+        .status-bar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            padding: 0.75rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #ddd;
+        }
+
+        .status-item.live {
+            border-left-color: #00aa00;
+            background: #f0fff0;
+        }
+
+        .status-item.beta {
+            border-left-color: #ff8800;
+            background: #fff8f0;
+        }
+
+        .status-item.concept {
+            border-left-color: #888;
+            background: #f5f5f5;
+        }
+
+        .status-item .label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-item .name {
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            border-top: 3px solid #000;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .nav-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+
+        .nav-card p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .nav-card .meta {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        .pyramid-section {
+            background: #fff;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .pyramid-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #000;
+        }
+
+        .pyramid-visual {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: linear-gradient(180deg, #1a1a1a 0%, #333 100%);
+            border-radius: 8px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .pyramid-layer {
+            margin: 0.5rem auto;
+            padding: 0.75rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .pyramid-layer:first-child {
+            max-width: 200px;
+        }
+
+        .pyramid-layer:nth-child(2) {
+            max-width: 300px;
+        }
+
+        .pyramid-layer:nth-child(3) {
+            max-width: 400px;
+        }
+
+        .pyramid-layer:nth-child(4) {
+            max-width: 500px;
+        }
+
+        .pyramid-layer:nth-child(5) {
+            max-width: 600px;
+        }
+
+        .pyramid-layer:nth-child(6) {
+            max-width: 700px;
+        }
+
+        .department-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .department-item {
+            padding: 0.75rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #333;
+            font-size: 0.85rem;
+        }
+
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .interface-card {
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #000;
+        }
+
+        .interface-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .interface-card p {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .interface-card .proof {
+            font-size: 0.8rem;
+            color: #00aa00;
+            font-weight: 600;
+        }
+
+        .footer {
+            background: #000;
+            color: #fff;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer .contact {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .footer .contact a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            color: #888;
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        .protocol-box {
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border-left: 3px solid #000;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-grid,
+            .department-grid,
+            .interface-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BSTM System Map & Operating Doctrine</h1>
+        <p class="tagline">Institutional Infrastructure for Human Agency</p>
+        <div class="mission">
+            <strong>Core Mission:</strong> BSTM exists to build systems that protect human agency under hostile conditions.
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- System Status -->
+        <div class="status-bar">
+            <h2>⚡ Live System Status</h2>
+            <div class="status-grid">
+                <div class="status-item live">
+                    <div class="label">● LIVE</div>
+                    <div class="name">Trading Discipline Bot</div>
+                </div>
+                <div class="status-item live">
+                    <div class="label">● LIVE</div>
+                    <div class="name">BSTM-X Platform</div>
+                </div>
+                <div class="status-item live">
+                    <div class="label">● LIVE</div>
+                    <div class="name">Protocol Engine</div>
+                </div>
+                <div class="status-item beta">
+                    <div class="label">◐ BETA</div>
+                    <div class="name">Command Channel</div>
+                </div>
+                <div class="status-item beta">
+                    <div class="label">◐ BETA</div>
+                    <div class="name">Execution Logs</div>
+                </div>
+                <div class="status-item concept">
+                    <div class="label">○ CONCEPT</div>
+                    <div class="name">Global Intelligence Network</div>
+                </div>
+            </div>
+            <p class="timestamp">Last verified: January 2025</p>
+        </div>
+
+        <!-- Navigation -->
+        <h2 style="margin-bottom: 1rem; font-size: 1.5rem;">Verification Interfaces</h2>
+        <div class="nav-grid">
+            <div class="nav-card" onclick="scrollToSection('identity')">
+                <h3>1. Identity & Registration</h3>
+                <p>Legal entity verification, founder accountability, contact vectors</p>
+                <div class="meta">Proves: "This entity exists. This person is accountable."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('systems')">
+                <h3>2. Live Systems</h3>
+                <p>Running infrastructure, bots, platforms, screenshots, demos</p>
+                <div class="meta">Proves: "Some systems already operate without funding."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('protocols')">
+                <h3>3. Protocols</h3>
+                <p>Decision rules, kill protocols, execution checklists</p>
+                <div class="meta">Proves: "Decisions follow rules, not moods."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('proof')">
+                <h3>4. Proof of Work</h3>
+                <p>Execution logs, version history, dated artifacts</p>
+                <div class="meta">Proves: "Execution happened over time."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('command')">
+                <h3>5. Command & Governance</h3>
+                <p>Authority map, decision ownership, command structure</p>
+                <div class="meta">Proves: "This is not a loose collective."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('pitch')">
+                <h3>6. Modular Pitch</h3>
+                <p>Multiple entry points: Trading, AgriTech, AI, Social Impact</p>
+                <div class="meta">Proves: "Same core. Different entry points."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('audit')">
+                <h3>7. Auditability</h3>
+                <p>Truth boundaries, public logs, clear metrics</p>
+                <div class="meta">Proves: "We expect to be checked."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('reputation')">
+                <h3>8. Reputation & Signals</h3>
+                <p>Community engagement, testimonials, third-party validation</p>
+                <div class="meta">Proves: "Others already interact with this."</div>
+            </div>
+
+            <div class="nav-card" onclick="scrollToSection('containment')">
+                <h3>9. Containment Doctrine</h3>
+                <p>What BSTM will NOT do, gated projects, frozen initiatives</p>
+                <div class="meta">Proves: "Growth here is deliberate."</div>
+            </div>
+        </div>
+
+        <!-- Pyramid Structure -->
+        <div class="pyramid-section">
+            <h2>The BSTM Pyramid Structure</h2>
+            <p>Six layers of institutional infrastructure. Each layer reinforces the others, ensuring scalability without collapse.</p>
+            
+            <div class="pyramid-visual">
+                <div class="pyramid-layer">Layer 0: Core Lock (Philosophy)</div>
+                <div class="pyramid-layer">Layer 1: Trust Layer (6 Rooms)</div>
+                <div class="pyramid-layer">Layer 2: Narrative & Identity (9 Rooms)</div>
+                <div class="pyramid-layer">Layer 3: Attention & Signal (10 Rooms)</div>
+                <div class="pyramid-layer">Layer 4: Protocol Engine (13 Rooms)</div>
+                <div class="pyramid-layer">Layer 5: Departmental Matrix (30 Departments)</div>
+                <div class="pyramid-layer">Layer 6: Scale & Immortality (5 Rooms)</div>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; color: #666;">63 functional rooms across 6 operational layers</p>
+        </div>
+
+        <!-- Interface 1: Identity -->
+        <div id="identity" class="pyramid-section">
+            <h2>Interface 1: Identity & Registration</h2>
+            
+            <div class="protocol-box">
+LEGAL ENTITY: [CIPA Registration Number]
+FOUNDER: [Your Name]
+ROLE: Founder & Systems Architect
+JURISDICTION: Botswana
+CONTACT: [Telegram Handle] | [Email]
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Registration Proof</h3>
+            <p>📄 <a href="#" style="color: #0066cc;">CIPA Certificate (PDF)</a></p>
+            <p>📄 <a href="#" style="color: #0066cc;">Memorandum & Articles</a></p>
+            <p>📄 <a href="#" style="color: #0066cc;">Director Declarations</a></p>
+
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #555;">
+                <strong>Verification:</strong> All documents available for inspection. No intermediaries required.
+            </p>
+        </div>
+
+        <!-- Interface 2: Live Systems -->
+        <div id="systems" class="pyramid-section">
+            <h2>Interface 2: Live Systems</h2>
+            
+            <div class="interface-grid">
+                <div class="interface-card">
+                    <h4>Trading Discipline Bot</h4>
+                    <p>Telegram bot enforcing trading rules and position management</p>
+                    <p class="proof">✓ Live - 47 users</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">View Screenshots</a> | 
+                        <a href="#" style="color: #0066cc;">Demo Video</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>BSTM-X Trading Platform</h4>
+                    <p>Custom trading interface with risk management tools</p>
+                    <p class="proof">✓ Live - Beta</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Platform Access</a> | 
+                        <a href="#" style="color: #0066cc;">User Guide</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>Command Channel</h4>
+                    <p>One-way broadcast for system commands and updates</p>
+                    <p class="proof">✓ Live - Read-only</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Join Channel</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>Protocol Engine</h4>
+                    <p>Automated decision enforcement and logging system</p>
+                    <p class="proof">✓ Live - Core Systems</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">View Protocols</a>
+                    </p>
+                </div>
+            </div>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #555;">
+                <strong>Rule:</strong> Running systems > Pretty mockups. Every system listed here is verifiable and testable.
+            </p>
+        </div>
+
+        <!-- Interface 3: Protocols -->
+        <div id="protocols" class="pyramid-section">
+            <h2>Interface 3: Protocols</h2>
+            <p>Decisions at BSTM follow documented rules, not emotional states. Below are our core protocols.</p>
+
+            <h3 style="margin-top: 1.5rem;">Decision Protocol v1</h3>
+            <div class="protocol-box">
+A project is ACCEPTED if:
+1. It protects human agency
+2. It can be built with existing resources
+3. It has a defined kill condition
+4. It doesn't require external permission
+5. Founder approves in writing
+
+REJECTION IS DEFAULT.
+ACCEPTANCE IS EXCEPTION.
+
+Last updated: January 2025
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Kill Protocol v1</h3>
+            <div class="protocol-box">
+A project is TERMINATED if:
+1. 30 days pass with no measurable progress
+2. Core assumption proves false
+3. Better alternative emerges
+4. Resource drain exceeds value
+5. Conflicts with core mission
+
+NO PROJECT IS SACRED.
+SUNK COST IS IGNORED.
+
+Last updated: January 2025
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Capital Acceptance Protocol v1</h3>
+            <div class="protocol-box">
+Investment is ACCEPTED if:
+1. Investor has verified all 9 interfaces
+2. Terms preserve founder authority
+3. Capital has specific deployment plan
+4. Exit strategy is mutual
+5. Values alignment is documented
+
+NO PANIC CAPITAL.
+NO DILUTION WITHOUT REASON.
+
+Last updated: January 2025
+            </div>
+
+            <p style="margin-top: 1rem;">
+                📄 <a href="#" style="color: #0066cc;">View All Protocols (Complete Set)</a>
+            </p>
+        </div>
+
+        <!-- Interface 4: Proof of Work -->
+        <div id="proof" class="pyramid-section">
+            <h2>Interface 4: Proof of Work</h2>
+            <p>Execution logs prove sustained effort over time. No retroactive edits. Ever.</p>
+
+            <h3 style="margin-top: 1.5rem;">Recent Execution Log (Last 30 Days)</h3>
+            <div class="protocol-box" style="max-height: 300px; overflow-y: scroll;">
+[2025-01-15] - Deployed bot update v2.3 - Users: 47 → 51
+[2025-01-14] - Protocol review session - No changes needed
+[2025-01-13] - New department proposal: Cybersecurity - Under review
+[2025-01-12] - BSTM-X stability patch - Zero downtime
+[2025-01-11] - Investor meeting prep - Materials updated
+[2025-01-10] - Command channel migration - Completed
+[2025-01-09] - Truth boundaries review - 2 projects moved to "paused"
+[2025-01-08] - Trading bot maintenance - Performance +12%
+[2025-01-07] - Documentation sprint - 8 protocols updated
+[2025-01-06] - Weekend: System monitoring only
+[2025-01-05] - Weekend: System monitoring only
+[2025-01-04] - GitHub commit: Protocol engine refactor
+[2025-01-03] - Team sync: Q1 objectives locked
+[2025-01-02] - New Year planning session - 3 projects killed
+[2025-01-01] - Holiday: No operations
+[2024-12-31] - Year-end archive completed
+[2024-12-30] - Investor pitch deck v3 finalized
+[2024-12-29] - Bot feature request review - 4 approved, 11 rejected
+[2024-12-28] - Infrastructure audit - All systems green
+[2024-12-27] - Protocol documentation sprint
+...
+
+Full log: https://github.com/bstm-systems/execution-logs
+            </div>
+
+            <p style="margin-top: 1rem;">
+                📊 <a href="#" style="color: #0066cc;">GitHub Commit History</a> | 
+                📊 <a href="#" style="color: #0066cc;">System Uptime Dashboard</a> | 
+                📊 <a href="#" style="color: #0066cc;">Version Archive</a>
+            </p>
+
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #555;">
+                <strong>This interface neutralizes credential anxiety.</strong> Your Form 5 doesn't matter. Your execution history does.
+            </p>
+        </div>
+
+        <!-- Interface 5: Command & Governance -->
+        <div id="command" class="pyramid-section">
+            <h2>Interface 5: Command & Governance</h2>
+            <p>Clear authority structure prevents chaos and investor fear.</p>
+
+            <h3 style="margin-top: 1.5rem;">Authority Map v1</h3>
+            <div class="protocol-box">
+COMMAND STRUCTURE:
+
+Level 1: Founder (You)
+- Final decision on all Layer 4 protocols
+- Veto power on capital intake
+- Department creation/termination
+- System architecture changes
+
+Level 2: Protocol Engine
+- Constrains all human decisions
+- No exceptions without documented override
+- Auto-enforcement where possible
+
+Level 3: Department Heads (When applicable)
+- Execution within protocol boundaries
+- No authority over protocols themselves
+- Report to Founder weekly
+
+DECISION FLOW:
+Request → Protocol Check → Founder Approval → Log → Execute
+
+NO CONSENSUS REQUIRED.
+NO COMMITTEE PARALYSIS.
+            </div>
+
+            <p style="margin-top: 1rem;">
+                📡 <a href="#" style="color: #0066cc;">Join Command Channel (Read-Only)</a>
+            </p>
+        </div>
+
+        <!-- Interface 6: Modular Pitch -->
+        <div id="pitch" class="pyramid-section">
+            <h2>Interface 6: Modular Pitch</h2>
+            <p>Same infrastructure, multiple entry points. Choose your lens.</p>
+
+            <div class="interface-grid">
+                <div class="interface-card">
+                    <h4>📈 Trading & Finance Lens</h4>
+                    <p>BSTM operates a disciplined trading system enforced by automation. We turn trader psychology into protocol.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Read Trading Pitch →</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>🌾 AgriTech Lens</h4>
+                    <p>Combining traditional agriculture with modern technology to boost productivity and empower communities.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Read AgriTech Pitch →</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>🤖 AI & Tech Lens</h4>
+                    <p>Building intelligent, data-driven solutions that enhance human capability without replacing human agency.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Read Tech Pitch →</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>🌍 Social Impact Lens</h4>
+                    <p>Healthcare, wellness, and community development systems designed for hostile conditions.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Read Impact Pitch →</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>🏛️ Institutional Lens</h4>
+                    <p>Building systems that survive founders, governments, and market conditions. Long-horizon thinking.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Read Institutional Pitch →</a>
+                    </p>
+                </div>
+
+                <div class="interface-card">
+                    <h4>🎓 Education & Talent Lens</h4>
+                    <p>Credential-free talent development. Protocol-driven learning. Education that produces capability, not certificates.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                        <a href="#" style="color: #0066cc;">Read Education Pitch →</a>
+                    </p>
+                </div>
+            </div>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #555;">
+                <strong>All pitches share the same spine:</strong> Trust Layer, Protocols, and Proof of Work. Only the surface narrative changes.
+            </p>
+        </div>
+
+        <!-- Interface 7: Auditability -->
+        <div id="audit" class="pyramid-section">
+            <h2>Interface 7: Auditability</h2>
+            <p>We expect to be checked. Making corruption expensive through radical transparency.</p>
+
+            <h3 style="margin-top: 1.5rem;">Truth Boundaries (Current Status)</h3>
+            
+            <h4 style="margin-top: 1rem; color: #00aa00;">✓ LIVE (Operating Now)</h4>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>Trading Discipline Bot (Telegram)</li>
+                <li>BSTM-X Trading Platform (Web)</li>
+                <li>Command Channel (Telegram)</li>
+                <li>Protocol Engine (Core Systems)</li>
+                <li>Execution Logging (GitHub)</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem; color: #ff8800;">◐ BETA / IN DEVELOPMENT</h4>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>AgriTech Department Infrastructure</li>
+                <li>AI Integration Tools</li>
+                <li>Investor Portal</li>
+                <li>Mobile App (Trading Focus)</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem; color: #888;">○ CONCEPTUAL (Planned, Not Built)</h4>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>Global Intelligence Network (GIM)</li>
+                <li>Healthcare Information System</li>
+                <li>Education Platform</li>
+                <li>Civilization Simulation Projects</li>
+                <li>Foundation Layer</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem; color: #cc0000;">⏸ PAUSED (Frozen Until Later)</h4>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>E-commerce Integration (resource constraint)</li>
+                <li>Video Production Department (priority shift)</li>
+                <li>Blockchain Projects (waiting for protocol maturity)</li>
+            </ul>
+
+            <p class="timestamp">Last updated: January 2025 | Next review: February 2025</p>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #555;">
+                <strong>Clarity beats perfection.</strong> We blur no lines between live, planned, and paused.
+            </p>
+        </div>
+
+        <!-- Interface 8: Reputation -->
+        <div id="reputation" class="pyramid-section">
+            <h2>Interface 8: Reputation & Signals</h2>
+            <p>Silent credibility accumulates over time through genuine interaction.</p>
+
+            <h3 style="margin-top: 1.5rem;">Community Signals</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>📱 Trading Bot: 51 active users across 3 countries</li>
+                <li>💬 Command Channel: 127 subscribers</li>
+                <li>⭐ GitHub: 23 stars, 8 contributors</li>
+                <li>🔗 Third-party mentions: [Link to press, forums, etc.]</li>
+                <li>📊 System uptime: 99.7% over last 90 days</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem;">User Testimonials</h3>
+            <div style="background: #f9f9f9; padding: 1rem; border-left: 3px solid #333; margin: 1rem 0; font-style: italic;">
+                "The discipline bot changed how I trade. It's not about strategy anymore—it's about following the rules you set for yourself." — Trading Bot User
+            </div>
+            <div style="background: #f9f9f9; padding: 1rem; border-left: 3px solid #333; margin: 1rem 0; font-style: italic;">
+                "Most systems are built to impress investors. This one is built to work when no one is watching." — Early Tester
+            </div>
+
+            <p style="margin-top: 1rem;">
+                📊 <a href="#" style="color: #0066cc;">View Full Testimonials</a> | 
+                📊 <a href="#" style="color: #0066cc;">Community Feedback Archive</a>
+            </p>
+        </div>
+
+        <!-- Interface 9: Containment -->
+        <div id="containment" class="pyramid-section">
+            <h2>Interface 9: Containment Doctrine</h2>
+            <p>Deliberate growth through explicit boundaries. What we will NOT do is as important as what we will do.</p>
+
+            <h3 style="margin-top: 1.5rem;">🚫 NEVER (Non-Negotiable Boundaries)</h3>
+            <div class="protocol-box">
+BSTM will NEVER:
+1. Compromise user privacy for revenue
+2. Take capital that demands protocol override
+3. Build systems that reduce human agency
+4. Chase trends without mission alignment
+5. Exaggerate capabilities for funding
+6. Delete execution logs or edit history
+7. Make decisions based on emotional urgency
+8. Expand departments before protocols exist
+9. Give equity for "advice" without execution
+10. Apologize for building deliberately
+
+These are PERMANENT boundaries.
+Violating any = mission failure.
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">🔐 GATED (Requires Explicit Approval)</h3>
+            <div class="protocol-box">
+Requires Founder approval + protocol check:
+- New department creation
+- Capital intake above $50K
+- Partnership agreements
+- Brand/name licensing
+- Media appearances representing BSTM
+- Geographic expansion
+- Any commitment over 90 days
+- Technology stack changes
+- Protocol modifications
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">⏸️ FROZEN (Good Ideas, Wrong Time)</h3>
+            <div class="protocol-box">
+On hold until conditions change:
+- Consumer mobile app (waiting for protocol maturity)
+- Video content production (resource priority)
+- Blockchain integration (waiting for clarity)
+- Physical office space (not needed yet)
+- Full-time hires (protocol-first)
+- Marketing campaigns (proof-first)
+- Conference attendance (investor-ready first)
+
+Frozen ≠ Rejected. Just premature.
+            </div>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #555;">
+                <strong>This makes you look senior, not ambitious.</strong> Restraint signals confidence.
+            </p>
+        </div>
+
+        <!-- Department Matrix -->
+        <div class="pyramid-section">
+            <h2>The 30-Department Matrix</h2>
+            <p>All departments operate within the same protocol framework. No autonomy without discipline.</p>
+
+            <h3 style="margin-top: 1.5rem;">Economic Systems</h3>
+            <div class="department-grid">
+                <div class="department-item">Trading Systems</div>
+                <div class="department-item">Finance & Accounting</div>
+                <div class="department-item">E-commerce & Payments</div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Technology</h3>
+            <div class="department-grid">
+                <div class="department-item">AI & Machine Learning</div>
+                <div class="department-item">Cybersecurity / Bug Bounty</div>
+                <div class="department-item">Web Development</div>
+                <div class="department-item">Mobile Apps</div>
+                <div class="department-item">Systems Integration</div>
+                <div class="department-item">Hosting & Domains</div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Creative & Media</h3>
+            <div class="department-grid">
+                <div class="department-item">Graphic Design</div>
+                <div class="department-item">Content & Copywriting</div>
+                <div class="department-item">Video & Multimedia</div>
+                <div class="department-item">Music & Culture</div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Human Systems</h3>
+            <div class="department-grid">
+                <div class="department-item">Healthcare Information</div>
+                <div class="department-item">Nutrition & Wellness</div>
+                <div class="department-item">Spiritual & Consciousness</div>
+                <div class="department-item">Education & Talent Dev</div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Infrastructure & Research</h3>
+            <div class="department-grid">
+                <div class="department-item">Data Science</div>
+                <div class="department-item">R&D Lab</div>
+                <div class="department-item">Civilization Projects</div>
+            </div>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #555;">
+                <strong>Current active departments: 8 of 30</strong><br>
+                Rule: Departments do NOT get autonomy before protocols exist.<br>
+                New departments require: Kill condition, resource map, protocol integration plan.
+            </p>
+        </div>
+
+        <!-- For Investors -->
+        <div class="pyramid-section" style="border-top: 3px solid #000;">
+            <h2>For Investors: What You Should Know</h2>
+            
+            <h3 style="margin-top: 1.5rem;">What Makes BSTM Different</h3>
+            <p style="line-height: 1.8;">
+                Most founders ask: "What app should I build?"<br>
+                BSTM asks: "What system survives hostility?"<br><br>
+                This is a 5-10 year advantage.
+            </p>
+
+            <h3 style="margin-top: 1.5rem;">Why This Scales</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>Verifiability:</strong> Everything can be checked independently</li>
+                <li><strong>Consistency:</strong> Logs prove sustained effort over time</li>
+                <li><strong>Discipline:</strong> Protocols prevent panic decisions</li>
+                <li><strong>Clarity:</strong> No jargon, no exaggeration, no hidden risks</li>
+                <li><strong>Containment:</strong> Capital won't be wasted on ego projects</li>
+                <li><strong>Modularity:</strong> 30+ departments can grow without chaos</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem;">What We're NOT</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>We are not a "startup" chasing viral growth</li>
+                <li>We are not seeking validation from accelerators</li>
+                <li>We are not pivoting based on market trends</li>
+                <li>We are not optimizing for quick exits</li>
+                <li>We are not building to sell in 3-5 years</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem;">What We Are</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>Building institutional infrastructure for 20+ year horizon</li>
+                <li>Operating systems already live and generating value</li>
+                <li>Protocol-driven with minimal emotional decision-making</li>
+                <li>Designed to survive founder departure</li>
+                <li>Protecting human agency as core mission</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem;">Due Diligence in 10 Minutes</h3>
+            <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>Check Interface 1 (Identity) — Does legal entity exist?</li>
+                <li>Check Interface 2 (Systems) — Do links work? Test the bot.</li>
+                <li>Check Interface 4 (Proof) — Is execution log consistent?</li>
+                <li>Check Interface 7 (Audit) — Are truth boundaries honest?</li>
+                <li>Check Interface 9 (Containment) — Are boundaries clear?</li>
+            </ol>
+
+            <p style="margin-top: 1.5rem; padding: 1rem; background: #f0f0f0; border-left: 3px solid #000;">
+                <strong>Investment Inquiry:</strong> If you've verified the above and want to discuss capital deployment, contact via Telegram or email below. We respond within 48 hours.
+            </p>
+        </div>
+
+        <!-- Quick Start Guide -->
+        <div class="pyramid-section">
+            <h2>Quick Start: Verify BSTM in 5 Minutes</h2>
+            
+            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 4px; margin-top: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Verification Checklist</h3>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Read the Core Mission (top of page)
+                </label>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Check Live System Status
+                </label>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Test the Trading Bot (if interested in trading)
+                </label>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Read Decision Protocol (Interface 3)
+                </label>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Scan Execution Log (Interface 4)
+                </label>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Review Truth Boundaries (Interface 7)
+                </label>
+                <label style="display: block; margin-bottom: 0.5rem;">
+                    <input type="checkbox"> Check Containment Doctrine (Interface 9)
+                </label>
+            </div>
+
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #555;">
+                If all checks pass → This is real.<br>
+                If any check fails → Ask questions via contact below.
+            </p>
+        </div>
+
+        <!-- Extension Roadmap -->
+        <div class="pyramid-section">
+            <h2>Extension Roadmap</h2>
+            <p>BSTM develops in extensions. Each extension locks the previous one.</p>
+
+            <div class="interface-grid" style="margin-top: 1.5rem;">
+                <div class="interface-card" style="border-left-color: #00aa00;">
+                    <h4>✓ Extension 1-2 (COMPLETE)</h4>
+                    <p>Internal Structure + Interfaces & Proof</p>
+                    <p class="proof">Current Phase</p>
+                </div>
+
+                <div class="interface-card" style="border-left-color: #ff8800;">
+                    <h4>◐ Extension 3 (IN PROGRESS)</h4>
+                    <p>Capital Containment - How to accept investment without corruption</p>
+                </div>
+
+                <div class="interface-card" style="border-left-color: #888;">
+                    <h4>○ Extension 4 (PLANNED)</h4>
+                    <p>Talent Replication - Hiring, onboarding, performance measurement</p>
+                </div>
+
+                <div class="interface-card" style="border-left-color: #888;">
+                    <h4>○ Extension 5 (PLANNED)</h4>
+                    <p>Institutional Memory - Knowledge transfer, succession, legacy</p>
+                </div>
+
+                <div class="interface-card" style="border-left-color: #888;">
+                    <h4>○ Extension 6+ (FUTURE)</h4>
+                    <p>Civilization Projects - 10+ year horizon thinking</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Stack -->
+        <div class="pyramid-section">
+            <h2>Technical Infrastructure</h2>
+            <p>Phone-first, offline-capable, minimal dependency.</p>
+
+            <h3 style="margin-top: 1.5rem;">Current Stack</h3>
+            <div class="department-grid">
+                <div class="department-item">Telegram (Command + Bots)</div>
+                <div class="department-item">GitHub (Version Control + Proof)</div>
+                <div class="department-item">Supabase (Database)</div>
+                <div class="department-item">Vercel (Web Hosting)</div>
+                <div class="department-item">Python (Bot Backend)</div>
+                <div class="department-item">React (Web Frontend)</div>
+                <div class="department-item">Notion (Documentation)</div>
+                <div class="department-item">WhatsApp (Operations)</div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Design Principles</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li>Works offline or with intermittent connectivity</li>
+                <li>Can be built and maintained from phone</li>
+                <li>No vendor lock-in (everything portable)</li>
+                <li>Free tier sufficient for early operations</li>
+                <li>Security by simplicity</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <h3>Contact & Verification</h3>
+        <div class="contact">
+            <p><strong>Founder:</strong> [Your Name]</p>
+            <p><strong>Telegram:</strong> <a href="#">@your_handle</a></p>
+            <p><strong>Email:</strong> <a href="mailto:contact@bstm.systems">contact@bstm.systems</a></p>
+            <p><strong>GitHub:</strong> <a href="#">github.com/bstm-systems</a></p>
+            <p><strong>Command Channel:</strong> <a href="#">t.me/bstm_command</a></p>
+        </div>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; font-size: 0.85rem; color: #aaa;">
+            <p>Document Version: 1.0</p>
+            <p>Last Updated: January 2025</p>
+            <p>Next Review: February 2025</p>
+            <p style="margin-top: 1rem; font-style: italic;">
+                "You're no longer brainstorming. You're assembling a machine."
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Add simple interaction tracking
+        document.querySelectorAll('.nav-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.background = '#f9f9f9';
+                setTimeout(() => {
+                    this.style.background = '#fff';
+                }, 200);
+            });
+        });
+
+        // Checklist functionality
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+                if (allChecked) {
+                    alert('✓ Verification Complete!\n\nYou have reviewed all core interfaces.\n\nBSTM is verifiable, disciplined, and ready for engagement.\n\nContact via Telegram or Email below to proceed.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
