@@ -1,39 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSTM System Map & Operating Doctrine</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSTM — The Sky of Sixty-Three Rooms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#070a12;
+  --night-2:#0b1020;
+  --panel:#0e1428;
+  --panel-2:#111834;
+  --line:rgba(230,225,210,0.09);
+  --gold:#cfa53b;
+  --gold-bright:#f3d47e;
+  --ice:#8fb8d9;
+  --ink:#ece7d8;
+  --ink-dim:#8791a6;
+  --rough:#4c5468;
+  --cut:#7fa4c9;
+  --polished:#cfa53b;
+  --set:#f6dd8f;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--night);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+.serif{font-family:'Fraunces', serif;}
+.mono{font-family:'JetBrains Mono', monospace;}
+a{color:var(--gold-bright);}
+::selection{background:rgba(207,165,59,0.35);}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #1a1a1a;
-            background: #f5f5f5;
-        }
+/* ---------- starfield ---------- */
+#starfield{position:fixed; inset:0; z-index:0; pointer-events:none;}
+.star{position:absolute; background:var(--ink); border-radius:50%; animation:twinkle 4s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.15} 50%{opacity:.9}}
 
-        .header {
-            background: #000;
-            color: #fff;
-            padding: 2rem 1rem;
-            text-align: center;
-            border-bottom: 4px solid #333;
-        }
+/* ---------- layout wrappers ---------- */
+.wrap{max-width:1040px; margin:0 auto; padding:0 1.25rem; position:relative; z-index:1;}
+section{position:relative; z-index:1;}
 
-        .header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+/* ---------- hero ---------- */
+.hero{padding:5rem 0 3rem; border-bottom:1px solid var(--line);}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:1.6rem; display:flex; align-items:center; gap:.6rem;
+}
+.eyebrow .spark{width:5px;height:5px;border-radius:50%;background:var(--gold-bright); box-shadow:0 0 10px var(--gold-bright); animation:twinkle 2.2s ease-in-out infinite;}
+h1.title{
+  font-family:'Fraunces', serif; font-weight:600; font-optical-sizing:auto;
+  font-size:clamp(2.1rem, 6vw, 4.1rem); line-height:1.05; margin:0 0 1.3rem; letter-spacing:-.01em;
+}
+h1.title em{font-style:italic; color:var(--gold-bright); font-weight:500;}
+.hero p.lead{max-width:620px; color:var(--ink-dim); font-size:1.08rem; margin:0 0 2.4rem;}
 
-        .header .tagline {
-            font-size: 0.95rem;
+.timeline{display:flex; flex-wrap:wrap; gap:0; border-top:1px solid var(--line); padding-top:1.6rem;}
+.tl-item{flex:1; min-width:150px; padding-right:1.2rem; margin-bottom:1rem;}
+.tl-year{font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--gold); letter-spacing:.08em;}
+.tl-label{font-size:.86rem; color:var(--ink-dim); margin-top:.25rem;}
+
+/* ---------- orbit signature ---------- */
+.orbit-section{padding:4rem 0 2rem; border-bottom:1px solid var(--line);}
+.section-eyebrow{font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:.5rem;}
+h2.section-title{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(1.5rem,3.4vw,2.1rem); margin:0 0 .6rem;}
+.section-sub{color:var(--ink-dim); max-width:560px; font-size:.94rem; margin-bottom:2rem;}
+
+.orbit-stage{display:flex; flex-direction:column; align-items:center; gap:1.6rem;}
+#orbitSvg{width:100%; max-width:620px; height:auto; touch-action:manipulation;}
+.orbit-ring{fill:none; stroke:var(--line); stroke-width:1;}
+.orbit-spoke{stroke:rgba(230,225,210,0.05); stroke-width:1;}
+.node-hit{fill:transparent; cursor:pointer;}
+.node-dot{transition:r .15s, filter .15s;}
+.node-dot.set{filter:drop-shadow(0 0 6px rgba(246,221,143,0.9));}
+.ring-label{font-family:'JetBrains Mono',monospace; font-size:9px; fill:var(--ink-dim); letter-spacing:.05em;}
+
+.detail-panel{
+  width:100%; max-width:620px; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  padding:1.4rem 1.5rem; min-height:132px;
+}
+.detail-empty{color:var(--ink-dim); font-size:.9rem; text-align:center; padding:1.4rem 0;}
+.detail-top{display:flex; justify-content:space-between; align-items:flex-start; gap:.8rem; margin-bottom:.5rem;}
+.detail-num{font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--ink-dim);}
+.detail-name{font-family:'Fraunces',serif; font-size:1.25rem; font-weight:600; margin:.15rem 0 0;}
+.stage-badge{font-family:'JetBrains Mono',monospace; font-size:.68rem; padding:.25rem .6rem; border-radius:999px; white-space:nowrap;}
+.stage-rough{background:rgba(76,84,104,0.25); color:#aab1c2;}
+.stage-cut{background:rgba(127,164,201,0.18); color:var(--ice);}
+.stage-polished{background:rgba(207,165,59,0.18); color:var(--gold);}
+.stage-set{background:rgba(246,221,143,0.22); color:var(--gold-bright);}
+.detail-purpose{color:var(--ink-dim); font-size:.88rem; margin:.4rem 0 .8rem;}
+.detail-products{font-size:.84rem; margin-bottom:.7rem;}
+.detail-products div{padding:.15rem 0; border-bottom:1px dotted var(--line); color:var(--ink);}
+.detail-notes{font-size:.83rem; color:var(--ink); background:rgba(255,255,255,0.02); border-left:2px solid var(--gold); padding:.5rem .7rem; margin-bottom:.7rem; border-radius:0 6px 6px 0;}
+.detail-links a{font-family:'JetBrains Mono',monospace; font-size:.72rem; text-decoration:none; border:1px solid var(--line); padding:.2rem .55rem; border-radius:6px; margin-right:.4rem; display:inline-block; margin-bottom:.4rem;}
+.detail-connected{font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--ink-dim);}
+
+/* ---------- diamond legend ---------- */
+.legend-row{display:flex; flex-wrap:wrap; gap:1.4rem; margin-top:1.6rem; font-family:'JetBrains Mono',monospace; font-size:.76rem; color:var(--ink-dim); justify-content:center;}
+.legend-row span{display:flex; align-items:center; gap:.5rem;}
+.dmd{width:10px; height:10px; transform:rotate(45deg); display:inline-block;}
+.dmd.rough{background:var(--rough);}
+.dmd.cut{background:var(--cut);}
+.dmd.polished{background:var(--polished);}
+.dmd.set{background:var(--set); box-shadow:0 0 6px var(--set);}
+
+/* ---------- instruments ---------- */
+.instruments{padding:4rem 0; border-bottom:1px solid var(--line);}
+.instr-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.1rem; margin-top:1.8rem;}
+.instr-card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.5rem;}
+.instr-card .roman{font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--gold); letter-spacing:.1em;}
+.instr-card h3{font-family:'Fraunces',serif; font-size:1.2rem; margin:.5rem 0 .3rem;}
+.instr-card .q{color:var(--gold-bright); font-size:.86rem; font-style:italic; margin-bottom:.7rem;}
+.instr-card p{color:var(--ink-dim); font-size:.87rem; margin:0 0 .8rem;}
+.instr-card a.go{font-family:'JetBrains Mono',monospace; font-size:.76rem; text-decoration:none; border-bottom:1px dotted var(--gold);}
+
+/* ---------- catalog ---------- */
+.catalog{padding:4rem 0 2rem;}
+.controls{position:sticky; top:0; z-index:10; background:rgba(7,10,18,0.9); backdrop-filter:blur(10px); margin:0 -1.25rem 1.5rem; padding:.9rem 1.25rem; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+.controls-inner{display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; max-width:1040px; margin:0 auto;}
+.filter-btn{font-family:'JetBrains Mono',monospace; font-size:.72rem; background:transparent; border:1px solid var(--line); color:var(--ink-dim); padding:.4rem .75rem; border-radius:999px; cursor:pointer;}
+.filter-btn.active{background:rgba(207,165,59,0.16); border-color:var(--gold); color:var(--gold-bright);}
+.search-input{font-family:'JetBrains Mono',monospace; font-size:.76rem; background:var(--panel); border:1px solid var(--line); color:var(--ink); padding:.42rem .8rem; border-radius:999px; margin-left:auto; min-width:150px;}
+.search-input:focus{outline:none; border-color:var(--gold);}
+.count-line{font-family:'JetBrains Mono',monospace; font-size:.76rem; color:var(--ink-dim); margin-bottom:1rem;}
+.room-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:.9rem;}
+.room-card{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem; transition:.15s;}
+.room-card:hover{border-color:rgba(207,165,59,0.4); transform:translateY(-2px);}
+.room-top{display:flex; justify-content:space-between; gap:.6rem; align-items:flex-start; margin-bottom:.35rem;}
+.room-num{font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--ink-dim);}
+.room-name{font-family:'Fraunces',serif; font-size:.98rem; font-weight:600; margin:.1rem 0 0;}
+.room-purpose{color:var(--ink-dim); font-size:.82rem; margin:.3rem 0 .5rem;}
+.hidden{display:none !important;}
+
+/* ---------- footer ---------- */
+footer{padding:3.5rem 0 4rem; border-top:1px solid var(--line);}
+.manifesto{font-family:'Fraunces',serif; font-style:italic; font-size:1.3rem; color:var(--gold-bright); max-width:640px; margin:0 0 2.2rem;}
+.foot-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.4rem; font-size:.85rem; color:var(--ink-dim);}
+.foot-grid h4{color:var(--ink); font-size:.85rem; margin:0 0 .4rem;}
+.foot-note{font-family:'JetBrains Mono',monospace; font-size:.74rem; color:var(--ink-dim); border-top:1px solid var(--line); margin-top:2.2rem; padding-top:1.2rem;}
+
+@media(max-width:640px){
+  .hero{padding:3.5rem 0 2rem;}
+  .instruments,.orbit-section,.catalog{padding-top:2.6rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="starfield"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="spark"></span> BSTM — GABORONE, BOTSWANA — JULY 2026</div>
+    <h1 class="title">Built alone, under <em>dark skies</em>,<br>on a single phone.</h1>
+    <p class="lead">Sixty-three rooms, six years, one founder. This is the ecosystem re-drawn as what it actually is — a sky, not a spreadsheet. Every room is a point of light. Some are barely visible. A few are fully set. None of it is finished, and none of it is pretending to be.</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-year">2018</div><div class="tl-label">Life Hustle Risk Reward — first clothing brand, first customers, first rejections</div></div>
+      <div class="tl-item"><div class="tl-year">2019</div><div class="tl-label">Self-taught forex &amp; indices trading begins on XM Global</div></div>
+      <div class="tl-item"><div class="tl-year">2019–2025</div><div class="tl-label">Self-taught coding, Python to full-stack — 15 real projects shipped</div></div>
+      <div class="tl-item"><div class="tl-year">2026</div><div class="tl-label">BSTM CIPA-registered · 100 Trials underway · this map redrawn</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ORBIT -->
+<section class="orbit-section">
+  <div class="wrap">
+    <div class="section-eyebrow">The Signature</div>
+    <h2 class="section-title">The Orbit of Room 63</h2>
+    <p class="section-sub">Everything in BSTM orbits one center: the Sovereign Trust. Trusts, foundations, organizations, and companies circle it in tightening rings — and the thirty operating departments form the outer sky, where nearly all the real, working light comes from. Tap any star.</p>
+    <div class="orbit-stage">
+      <svg id="orbitSvg" viewBox="0 0 640 640"></svg>
+      <div class="legend-row">
+        <span><i class="dmd rough"></i> Rough — concept only</span>
+        <span><i class="dmd cut"></i> Cut — architecture exists</span>
+        <span><i class="dmd polished"></i> Polished — working, not activated</span>
+        <span><i class="dmd set"></i> Set — live, used in reality</span>
+      </div>
+      <div class="detail-panel" id="detailPanel">
+        <div class="detail-empty">Tap a star in the orbit above, or a room in the catalog below, to read it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTRUMENTS -->
+<section class="instruments">
+  <div class="wrap">
+    <div class="section-eyebrow">The Operating Core</div>
+    <h2 class="section-title">Three instruments, the way a navigator would carry them</h2>
+    <p class="section-sub">No compass is useful without a log of where you've been, and no log means anything if you can't trust it. BSTM runs on the same three instruments a night-sky navigator would trust with their life.</p>
+    <div class="instr-grid">
+      <div class="instr-card">
+        <div class="roman">THE CHART</div>
+        <h3>System Map</h3>
+        <div class="q">"What exists?"</div>
+        <p>The structural chart of all 63 rooms and how they connect. This document is that chart, redrawn.</p>
+        <a class="go" href="https://todd366.github.io/bstm-system-map/" target="_blank">todd366.github.io/bstm-system-map/ ↗</a>
+      </div>
+      <div class="instr-card">
+        <div class="roman">THE LOGBOOK</div>
+        <h3>ELOS</h3>
+        <div class="q">"What have we learned?"</div>
+        <p>The Evolutionary Learning Operating System — captures every field trial, turns evidence into patterns, and patterns into principles. Dashboard, Trials, Patterns, Principles, Ecosystem, Scorecard, Sentinel, Settings.</p>
+        <a class="go" href="https://todd366.github.io/bstm-elos/#/ecosystem" target="_blank">todd366.github.io/bstm-elos/#/ecosystem ↗</a>
+      </div>
+      <div class="instr-card">
+        <div class="roman">THE SENTINEL</div>
+        <h3>Sentinel</h3>
+        <div class="q">"Can we trust it?"</div>
+        <p>The watchtower. Reports overall health, trial integrity, pattern integrity, principle integrity, offline/PWA status, and storage — the one instrument that keeps the other two honest.</p>
+        <span class="go" style="border:none; color:var(--ink-dim);">Embedded inside ELOS — no separate URL yet</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<section class="catalog">
+  <div class="wrap">
+    <div class="section-eyebrow">The Star Catalog</div>
+    <h2 class="section-title">Every room, indexed</h2>
+    <p class="section-sub">The orbit is the feeling. This is the instrument you actually use day to day — searchable, filterable, honest about what stage each room is really in.</p>
+  </div>
+  <div class="controls">
+    <div class="controls-inner" id="filterBar">
+      <button class="filter-btn active" data-layer="all">All 63</button>
+      <button class="filter-btn" data-layer="dept">Departments (1–30)</button>
+      <button class="filter-btn" data-layer="company">Companies (31–45)</button>
+      <button class="filter-btn" data-layer="org">Orgs (46–55)</button>
+      <button class="filter-btn" data-layer="fdn">Foundations (56–60)</button>
+      <button class="filter-btn" data-layer="trust">Trusts &amp; Sovereign (61–63)</button>
+      <input class="search-input" id="searchInput" placeholder="search a room...">
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="count-line" id="countLine"></div>
+    <div class="room-grid" id="roomGrid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="manifesto">"Reality → Research → Patterns → Solutions → Implementation. You're no longer brainstorming. You're assembling a machine."</p>
+    <div class="foot-grid">
+      <div><h4>BSTM</h4>Building Technology Solutions for Businesses Through Research, Innovation, and Digital Transformation.</div>
+      <div><h4>Founder &amp; CEO</h4>Thobo Atlang Mosanako<br>Gaborone, Botswana</div>
+      <div><h4>Contact</h4>+267 78355551<br>bstm366@gmail.com</div>
+      <div><h4>Legal</h4>CIPA-registered entity, Botswana</div>
+    </div>
+    <div class="foot-note">Map v3.0 — redrawn as an orbit, not a spreadsheet. Status reflects founder-reported reality as of July 2026. Re-verify at each ecosystem review.</div>
+  </div>
+</footer>
+
+<script>
+/* ---------- starfield background ---------- */
+const sf = document.getElementById('starfield');
+for(let i=0;i<90;i++){
+  const s = document.createElement('div');
+  s.className='star';
+  const size = Math.random()*2+0.6;
+  s.style.width = size+'px'; s.style.height=size+'px';
+  s.style.left = Math.random()*100+'%';
+  s.style.top = Math.random()*100+'%';
+  s.style.animationDelay = (Math.random()*4)+'s';
+  sf.appendChild(s);
+}
+
+/* ---------- room data (same verified facts, restaged as diamond stages) ---------- */
+const rooms = [
+{n:1, layer:'dept', name:'AI & Machine Learning', stage:'polished', purpose:'Artificial intelligence research, automation, and intelligent agents for the ecosystem.', products:['Offline AI — code exists, not activated','Agent Zero — repo exists, not activated','NetBot — conceptual','Hunter Agent — built, currently switched off','5-Brain AI Architecture — blueprint + code, not activated','Telegram AI Bot — live'], links:[['Telegram AI Bot','https://t.me/Todd366Bot']], connected:[6,7,25], notes:'Most components exist in code but are not switched on — the bottleneck is activation, not invention.'},
+{n:2, layer:'dept', name:'Trading Automation', stage:'polished', purpose:'Financial technology, trading systems, and automation.', products:['BSTM-X Trading Platform — shell live, modules not connected','30+ indicators — status audit pending','5 trading bots — need updating for current markets','TSS Strategy — still effective','TSS Book — finished, needs professional formatting'], links:[['BSTM-X','https://bstm-x.vercel.app/'],['GitHub','https://github.com/Todd366/bstm-x']], connected:[1,17], notes:'The shell is live; the modules exist but still need wiring and re-validation.'},
+{n:3, layer:'dept', name:'VPN & Network Security', stage:'cut', purpose:'Privacy, networking, and cybersecurity infrastructure.', products:['VPN system — conceptual','Network security tools — partial','Privacy infrastructure — undefined'], links:[], connected:[6], notes:'Earliest-stage department in the technology division.'},
+{n:4, layer:'dept', name:'Web Development', stage:'set', purpose:'Business websites, SaaS platforms, and client-facing systems.', products:['Website development — limited by device speed','Business websites — delivered','SaaS systems — available'], links:[['Pinnacle Dynamics','https://pinnade-dynamics-website.vercel.app/'],['BSTM site','https://bstm.hellofigwebsite.com/']], connected:[6,18], notes:'Client work is real and delivered; throughput is limited by working from a phone.'},
+{n:5, layer:'dept', name:'Mobile Application Development', stage:'rough', purpose:'Native and progressive mobile applications.', products:['Mobile app development — blocked on store fees','Android/iOS concepts','PWA systems'], links:[], connected:[16,18], notes:'Main blocker is funding for store publishing, not capability.'},
+{n:6, layer:'dept', name:'System Integration & API', stage:'polished', purpose:'Connecting every BSTM system into one ecosystem.', products:['BSTM System Map — this document, needs periodic refresh','API architecture — up to date'], links:[['System Map','https://todd366.github.io/bstm-system-map/']], connected:[1,7,25], notes:'One of the three operating instruments.'},
+{n:7, layer:'dept', name:'Data Science & Analytics', stage:'cut', purpose:'Turning ecosystem and business data into usable intelligence.', products:['Data analysis','Business intelligence','Analytics systems'], links:[['GitHub','https://todd366.github.io/']], connected:[1,6,17,25], notes:'The real analytics substrate right now is the 100 Trials data itself.'},
+{n:8, layer:'dept', name:'Blockchain & Cryptocurrency', stage:'set', purpose:'Blockchain technology and ecosystem-linked digital economy.', products:['THoBoCoin — one step from mainnet deployment','Token ecosystem — connected into the wider ecosystem'], links:[['THoBoCoin app','https://thobocoin-project-frontend.vercel.app/']], connected:[16,17], notes:'Closest department to a genuine milestone completion.'},
+{n:9, layer:'dept', name:'Graphic Design & Branding', stage:'rough', purpose:'Visual identity and creative assets for BSTM and its products.', products:['Brand identity — plain merchandise available','Logos — not yet created','Graphics — still in design stage'], links:[], connected:[28], notes:''},
+{n:10, layer:'dept', name:'Content Creation & Copywriting', stage:'polished', purpose:'Documentation, publishing, and the BSTM written record.', products:['Book 1 — "The Record" — finished, awaiting publishing','Book 2 — "The Framework" — page 55 of 366','Publications — still need copyright registration'], links:[], connected:[25], notes:''},
+{n:11, layer:'dept', name:'Social Media Management', stage:'set', purpose:'Digital community management and audience growth.', products:['Facebook management','LinkedIn — 48k followers','Community channels — Facebook, WhatsApp, TikTok'], links:[['Facebook','https://www.facebook.com/BotswanaonlineNew'],['TikTok','https://vm.tiktok.com/ZS9MaSNHtVyQV-t299v/']], connected:[12,18], notes:''},
+{n:12, layer:'dept', name:'Digital Marketing & Advertising', stage:'set', purpose:'Marketing strategy, campaigns, and audience growth.', products:['Marketing campaigns','Influencer network — combined reach 600k+','Growth strategy — founder-centered 3-part audience model'], links:[], connected:[11,18], notes:''},
+{n:13, layer:'dept', name:'BSTM Tutorial Center', stage:'cut', purpose:'Education technology and learning systems.', products:['AI tutoring system — conceptual, model chosen','School syllabus platform — conceptual / in progress'], links:[], connected:[24], notes:''},
+{n:14, layer:'dept', name:'Private Security', stage:'cut', purpose:'Security technology and protection systems.', products:['Security systems — code exists, not yet integrated','Security web applications — conceptual'], links:[], connected:[3], notes:''},
+{n:15, layer:'dept', name:'Music', stage:'set', purpose:'Creative production and digital music publishing.', products:['35+ BSTM songs — all recorded','AI music production — code not yet pushed to GitHub','Published on Audiomack and Audius'], links:[], connected:[10], notes:''},
+{n:16, layer:'dept', name:'CabLink Transportation', stage:'set', purpose:'Mobility and ride-booking solutions.', products:['Taxi booking — ~90% complete, app is live','Delivery integration — needs full assessment','THoBoCoin rewards integration'], links:[['CabLink PWA','https://todd366.github.io/CabLink-pwa/']], connected:[8,5], notes:''},
+{n:17, layer:'dept', name:'Finance & Accounting', stage:'set', purpose:'Business finance and chain-of-custody systems.', products:['FlowLedger — ~99% complete; remaining issue is browser image persistence after refresh','Accounting systems — in progress'], links:[['FlowLedger','https://bstm-flowledger.vercel.app/']], connected:[18,2,7], notes:'Closest existing product to full completion.'},
+{n:18, layer:'dept', name:'Marketplace & E-Commerce', stage:'set', purpose:'Digital commerce infrastructure connecting businesses and customers.', products:['BSTM Marketplace — ~90% complete','Vendor ecosystem — conceptual'], links:[['Marketplace','https://todd366.github.io/bstm-marketplace-app/index.html']], connected:[17,11,12], notes:''},
+{n:19, layer:'dept', name:'Research & Development', stage:'cut', purpose:'Innovation and experimentation across the ecosystem.', products:['Future technology research — conceptual','Innovation projects — in progress'], links:[], connected:[1], notes:''},
+{n:20, layer:'dept', name:'Healthcare Information & Wellness', stage:'rough', purpose:'Health information systems and emergency support concepts.', products:['Healthcare information systems — conceptual','Emergency support concepts — on paper'], links:[], connected:[21], notes:''},
+{n:21, layer:'dept', name:'Nutrition & Health Products', stage:'rough', purpose:'Nutrition solutions and health products.', products:['Nutrient Shake Project — blueprint, menu, mixing description exist','Health products — coming soon'], links:[], connected:[20], notes:''},
+{n:22, layer:'dept', name:'Micro Farming & Urban Agriculture', stage:'polished', purpose:'Agricultural innovation and urban food production.', products:['30m × 57m orchard project — in progress','Fruit production — in progress'], links:[], connected:[23], notes:''},
+{n:23, layer:'dept', name:'Sustainability & Environmental', stage:'rough', purpose:'Environmental solutions for the ecosystem.', products:['GreenCycle concepts — conceptual','Sustainable technology — in progress'], links:[], connected:[22], notes:''},
+{n:24, layer:'dept', name:'Human Resources & Talent Development', stage:'cut', purpose:'People development for the ecosystem.', products:['Recruitment systems — in progress','Training — in progress'], links:[], connected:[13], notes:''},
+{n:25, layer:'dept', name:'Project Management Office', stage:'set', purpose:'Execution, research, and documentation management.', products:['BSTM 100 Trials — 6 completed, 2 declined','Documentation systems — in progress'], links:[], connected:[6,1,7], notes:'The department that generates the evidence the rest of the ecosystem is built on.'},
+{n:26, layer:'dept', name:'Legal & Compliance', stage:'cut', purpose:'Governance and regulatory compliance.', products:['Legal systems — conceptual','Compliance framework — CIPA certificate obtained'], links:[], connected:[63], notes:'CIPA registration is the one concrete, completed legal milestone.'},
+{n:27, layer:'dept', name:'G.I.N — Global Intelligence Network', stage:'rough', purpose:'Information networks and intelligence systems.', products:['Intelligence network — conceptual','Data systems — conceptual'], links:[], connected:[7], notes:''},
+{n:28, layer:'dept', name:'BSTM Clothing Brand', stage:'rough', purpose:'Apparel and merchandise under the BSTM brand.', products:['Clothing designs — conceptual','Merchandise — small existing stock'], links:[], connected:[9], notes:'Successor to the earlier Life Hustle Risk Reward brand (2018–2019).'},
+{n:29, layer:'dept', name:'Spiritual Guidance & Consciousness', stage:'cut', purpose:'Human development and philosophy research.', products:['Consciousness research — in progress','Philosophy systems — in progress'], links:[], connected:[], notes:''},
+{n:30, layer:'dept', name:'BHD Department', stage:'rough', purpose:'Advanced, long-horizon technology research.', products:['Black Hole Drive concept — conceptual','Advanced data technology research — conceptual'], links:[], connected:[19], notes:'Furthest-horizon department in the ecosystem.'},
+
+{n:31, layer:'company', name:'BSTM Tech Solutions (Pty) Ltd', stage:'rough', purpose:'AI, software, web, and systems — corporate shell.', products:[], links:[], connected:[1,4,6], notes:'Structural entity — not yet independently activated.'},
+{n:32, layer:'company', name:'THoBoCoin Ltd', stage:'rough', purpose:'Blockchain, token economy, and digital payments.', products:[], links:[], connected:[8], notes:'Structural entity.'},
+{n:33, layer:'company', name:'GreenCycle (Pty) Ltd', stage:'rough', purpose:'Sustainability and environmental services.', products:[], links:[], connected:[23], notes:'Structural entity.'},
+{n:34, layer:'company', name:'NutriHub (Pty) Ltd', stage:'rough', purpose:'Nutrition and health products.', products:[], links:[], connected:[21], notes:'Structural entity.'},
+{n:35, layer:'company', name:'SecureNet (Pty) Ltd', stage:'rough', purpose:'VPN and cybersecurity.', products:[], links:[], connected:[3], notes:'Structural entity.'},
+{n:36, layer:'company', name:'CabLink (Pty) Ltd', stage:'rough', purpose:'Transport technology.', products:[], links:[], connected:[16], notes:'Structural entity.'},
+{n:37, layer:'company', name:'BSTM Media (Pty) Ltd', stage:'rough', purpose:'Music, content, and media.', products:[], links:[], connected:[15,10], notes:'Structural entity.'},
+{n:38, layer:'company', name:'GIN Analytics (Pty) Ltd', stage:'rough', purpose:'Data intelligence.', products:[], links:[], connected:[27,7], notes:'Structural entity.'},
+{n:39, layer:'company', name:'BSTM Finance (Pty) Ltd', stage:'rough', purpose:'Finance and FlowLedger.', products:[], links:[], connected:[17], notes:'Structural entity.'},
+{n:40, layer:'company', name:'Marketplace Botswana (Pty) Ltd', stage:'rough', purpose:'E-commerce platform.', products:[], links:[], connected:[18], notes:'Structural entity.'},
+{n:41, layer:'company', name:'BSTM Security Services (Pty) Ltd', stage:'rough', purpose:'Security operations.', products:[], links:[], connected:[14], notes:'Structural entity.'},
+{n:42, layer:'company', name:'AgriTech (Pty) Ltd', stage:'rough', purpose:'Farming technology.', products:[], links:[], connected:[22], notes:'Structural entity.'},
+{n:43, layer:'company', name:'BSTM Consulting (Pty) Ltd', stage:'rough', purpose:'Business consulting.', products:[], links:[], connected:[25], notes:'Structural entity.'},
+{n:44, layer:'company', name:'HealthWave (Pty) Ltd', stage:'rough', purpose:'Healthcare systems.', products:[], links:[], connected:[20], notes:'Structural entity.'},
+{n:45, layer:'company', name:'BHD Innovations (Pty) Ltd', stage:'rough', purpose:'Advanced research.', products:[], links:[], connected:[30], notes:'Structural entity.'},
+
+{n:46, layer:'org', name:'BSTM Holdings', stage:'rough', purpose:'Umbrella for technology, blockchain, and innovation companies.', products:[], links:[], connected:[31,32,45], notes:'Structural entity.'},
+{n:47, layer:'org', name:'Green Initiatives', stage:'rough', purpose:'GreenCycle + AgriTech.', products:[], links:[], connected:[33,42], notes:'Structural entity.'},
+{n:48, layer:'org', name:'Health & Wellness', stage:'rough', purpose:'NutriHub + HealthWave.', products:[], links:[], connected:[34,44], notes:'Structural entity.'},
+{n:49, layer:'org', name:'Secure Systems', stage:'rough', purpose:'SecureNet + Security Services.', products:[], links:[], connected:[35,41], notes:'Structural entity.'},
+{n:50, layer:'org', name:'Digital Media', stage:'rough', purpose:'BSTM Media.', products:[], links:[], connected:[37], notes:'Structural entity.'},
+{n:51, layer:'org', name:'Data Intelligence', stage:'rough', purpose:'GIN Analytics.', products:[], links:[], connected:[38], notes:'Structural entity.'},
+{n:52, layer:'org', name:'Financial Services', stage:'rough', purpose:'BSTM Finance.', products:[], links:[], connected:[39], notes:'Structural entity.'},
+{n:53, layer:'org', name:'E-Commerce Hub', stage:'rough', purpose:'Marketplace Botswana + CabLink.', products:[], links:[], connected:[40,36], notes:'Structural entity.'},
+{n:54, layer:'org', name:'BSTM Consulting Group', stage:'rough', purpose:'Consulting operations.', products:[], links:[], connected:[43], notes:'Structural entity.'},
+{n:55, layer:'org', name:'Innovation Labs', stage:'rough', purpose:'BHD Innovations + technology research.', products:[], links:[], connected:[45], notes:'Structural entity.'},
+
+{n:56, layer:'fdn', name:'BSTM Innovation Foundation', stage:'rough', purpose:'AI, blockchain, software, and research.', products:[], links:[], connected:[46], notes:'Structural entity.'},
+{n:57, layer:'fdn', name:'Sustainability & Growth Foundation', stage:'rough', purpose:'Agriculture and environment.', products:[], links:[], connected:[47], notes:'Structural entity.'},
+{n:58, layer:'fdn', name:'Digital Transformation Foundation', stage:'rough', purpose:'Technology, networks, and data.', products:[], links:[], connected:[49,51], notes:'Structural entity.'},
+{n:59, layer:'fdn', name:'Wellness & Lifestyle Foundation', stage:'rough', purpose:'Healthcare and nutrition.', products:[], links:[], connected:[48], notes:'Structural entity.'},
+{n:60, layer:'fdn', name:'Economic Empowerment Foundation', stage:'rough', purpose:'Finance, marketplace, and entrepreneurship.', products:[], links:[], connected:[52,53], notes:'Structural entity.'},
+
+{n:61, layer:'trust', name:'Ecosystem Planning Trust', stage:'rough', purpose:'Strategy, architecture, and long-term planning.', products:[], links:[], connected:[63], notes:'Structural entity.'},
+{n:62, layer:'trust', name:'Asset Acquisition Trust', stage:'rough', purpose:'Land, equipment, and physical assets.', products:[], links:[], connected:[63], notes:'Structural entity.'},
+{n:63, layer:'trust', name:'BSTM Sovereign Trust', stage:'cut', purpose:'Ultimate ecosystem ownership — IP, brand protection, and long-term asset management.', products:[], links:[], connected:[61,62], notes:'Root node. Every one of the other 62 rooms traces back here.'},
+];
+
+const stageMeta = {
+  rough:{label:'Rough', cls:'stage-rough', color:'var(--rough)'},
+  cut:{label:'Cut', cls:'stage-cut', color:'var(--cut)'},
+  polished:{label:'Polished', cls:'stage-polished', color:'var(--polished)'},
+  set:{label:'Set', cls:'stage-set', color:'var(--set)'},
+};
+const stageR = {rough:3, cut:4, polished:5.5, set:7};
+
+/* ---------- orbit svg build ---------- */
+const svg = document.getElementById('orbitSvg');
+const CX=320, CY=320;
+const ringRadius = {trust:60, fdn:120, org:170, company:220, dept:280};
+// room 63 sits at dead center; other trust (61,62) sit on ringRadius.trust
+const ringsToLabel = [
+  {r:60, label:'TRUSTS'}, {r:120, label:'FOUNDATIONS'}, {r:170,label:'ORGS'}, {r:220,label:'COMPANIES'}, {r:280,label:'DEPARTMENTS'}
+];
+let svgHTML = '';
+ringsToLabel.forEach(rg=>{
+  svgHTML += `<circle class="orbit-ring" cx="${CX}" cy="${CY}" r="${rg.r}"></circle>`;
+});
+
+function groupByLayer(layer){ return rooms.filter(r=>r.layer===layer); }
+
+// center node: room 63
+const center = rooms.find(r=>r.n===63);
+svgHTML += nodeMarkup(center, CX, CY);
+
+// trusts ring (61,62) — 2 nodes
+placeRing(groupByLayer('trust').filter(r=>r.n!==63), ringRadius.trust);
+// foundations (56-60) — 5 nodes
+placeRing(groupByLayer('fdn'), ringRadius.fdn);
+// orgs (46-55) — 10 nodes
+placeRing(groupByLayer('org'), ringRadius.org);
+// companies (31-45) — 15 nodes
+placeRing(groupByLayer('company'), ringRadius.company);
+// departments (1-30) — 30 nodes, outer sky
+placeRing(groupByLayer('dept'), ringRadius.dept);
+
+function placeRing(list, r){
+  const count = list.length;
+  list.forEach((room,i)=>{
+    const angle = (i/count) * Math.PI*2 - Math.PI/2;
+    const x = CX + r*Math.cos(angle);
+    const y = CY + r*Math.sin(angle);
+    svgHTML += nodeMarkup(room, x, y);
+  });
+}
+
+function nodeMarkup(room, x, y){
+  const meta = stageMeta[room.stage];
+  const rad = stageR[room.stage];
+  const setClass = room.stage==='set' ? 'node-dot set' : 'node-dot';
+  return `<circle class="node-hit" cx="${x}" cy="${y}" r="13" data-n="${room.n}"></circle>
+          <circle class="${setClass}" cx="${x}" cy="${y}" r="${rad}" fill="${meta.color}" data-n="${room.n}" style="pointer-events:none;"></circle>`;
+}
+
+// ring text labels along top
+ringsToLabel.forEach(rg=>{
+  svgHTML += `<text class="ring-label" x="${CX+4}" y="${CY-rg.r-4}">${rg.label}</text>`;
+});
+
+svg.innerHTML = svgHTML;
+
+/* ---------- detail panel ---------- */
+const panel = document.getElementById('detailPanel');
+function showDetail(n){
+  const r = rooms.find(rm=>rm.n===n);
+  if(!r) return;
+  const meta = stageMeta[r.stage];
+  let productsHtml = r.products && r.products.length ? `<div class="detail-products">${r.products.map(p=>`<div>${p}</div>`).join('')}</div>` : '';
+  let notesHtml = r.notes ? `<div class="detail-notes">${r.notes}</div>` : '';
+  let linksHtml = r.links && r.links.length ? `<div class="detail-links">${r.links.map(l=>`<a href="${l[1]}" target="_blank">${l[0]} ↗</a>`).join('')}</div>` : '';
+  let connectedHtml = r.connected && r.connected.length ? `<div class="detail-connected">Connected → <b>${r.connected.join(', ')}</b></div>` : '';
+  panel.innerHTML = `
+    <div class="detail-top">
+      <div>
+        <div class="detail-num mono">ROOM ${r.n}</div>
+        <div class="detail-name">${r.name}</div>
+      </div>
+      <span class="stage-badge ${meta.cls}">${meta.label}</span>
+    </div>
+    <div class="detail-purpose">${r.purpose}</div>
+    ${productsHtml}
+    ${notesHtml}
+    ${linksHtml}
+    ${connectedHtml}
+  `;
+}
+svg.addEventListener('click', (e)=>{
+  const n = e.target.getAttribute('data-n');
+  if(n) showDetail(parseInt(n));
+});
+
+/* ---------- catalog ---------- */
+const grid = document.getElementById('roomGrid');
+const countLine = document.getElementById('countLine');
+function renderCatalog(layer, query){
+  grid.innerHTML='';
+  let shown=0;
+  rooms.forEach(r=>{
+    const layerMatch = layer==='all' || r.layer===layer;
+    const q=(query||'').toLowerCase();
+    const textMatch = !q || r.name.toLowerCase().includes(q) || String(r.n).includes(q) || r.purpose.toLowerCase().includes(q);
+    if(layerMatch && textMatch){
+      shown++;
+      const meta = stageMeta[r.stage];
+      const card=document.createElement('div');
+      card.className='room-card';
+      card.innerHTML = `
+        <div class="room-top">
+          <div>
+            <div class="room-num mono">ROOM ${r.n}</div>
+            <div class="room-name">${r.name}</div>
+          </div>
+          <span class="stage-badge ${meta.cls}">${meta.label}</span>
+        </div>
+        <div class="room-purpose">${r.purpose}</div>
+      `;
+      card.addEventListener('click', ()=>{ showDetail(r.n); document.querySelector('.orbit-stage').scrollIntoView({behavior:'smooth'}); });
+      grid.appendChild(card);
+    }
+  });
+  countLine.textContent = `Showing ${shown} of 63 rooms`;
+}
+document.getElementById('filterBar').addEventListener('click',(e)=>{
+  if(e.target.classList.contains('filter-btn')){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    renderCatalog(e.target.dataset.layer, document.getElementById('searchInput').value);
+  }
+});
+document.getElementById('searchInput').addEventListener('input',(e)=>{
+  const active = document.querySelector('.filter-btn.active').dataset.layer;
+  renderCatalog(active, e.target.value);
+});
+renderCatalog('all','');
+</script>
+</body>
+</html>
             color: #aaa;
             font-weight: 300;
         }
